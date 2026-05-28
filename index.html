@@ -96,53 +96,40 @@
 
 
     async function init() {
-
       try {
-
-        const modelURL =
-          URL + "model.json";
-
-        const metadataURL =
-          URL + "metadata.json";
-
-
-        model =
-          await tmImage.load(
-            modelURL,
-            metadataURL
-          );
-
-
-        webcam =
-          new tmImage.Webcam(
-            400,
-            400,
-            true
-          );
-
-
+    
+        console.log("Iniciando...");
+    
+        console.log("tmImage:", tmImage);
+    
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+    
+        console.log("Cargando modelo...");
+    
+        model = await tmImage.load(modelURL, metadataURL);
+    
+        console.log("Modelo cargado");
+    
+        webcam = new tmImage.Webcam(400, 400, true);
+    
+        console.log("Cámara creando...");
+    
         await webcam.setup();
-
+    
+        console.log("Cámara lista");
+    
         await webcam.play();
-
-        window.requestAnimationFrame(loop);
-
-
-        document
-          .getElementById("webcam-container")
+    
+        document.getElementById("webcam-container")
           .appendChild(webcam.canvas);
-
+    
+        requestAnimationFrame(loop);
+    
+      } catch (err) {
+        console.error("FULL ERROR:", err);
+        alert(err?.message || err);
       }
-
-      catch (err) {
-
-        console.error(err);
-
-        alert(
-          "Error cargando cámara o modelo"
-        );
-      }
-
     }
 
 
