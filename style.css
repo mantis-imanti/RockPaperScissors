@@ -1,18 +1,14 @@
 body {
   margin: 0;
   padding: 30px;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   text-align: center;
   background: #0f172a;
   color: white;
 }
 
-h1 {
-  margin-bottom: 20px;
-}
-
 button {
-  padding: 12px 20px;
+  padding: 14px 20px;
   font-size: 18px;
   border: none;
   border-radius: 10px;
@@ -27,7 +23,22 @@ canvas {
   margin-top: 10px;
 }
 
+#countdown {
+  font-size: 60px;
+  margin: 20px;
+}
+
 #label-container {
   font-size: 28px;
+  margin-top: 10px;
+}
+
+#result {
+  font-size: 32px;
   margin-top: 20px;
+}
+
+#score {
+  font-size: 24px;
+  margin: 10px;
 }
