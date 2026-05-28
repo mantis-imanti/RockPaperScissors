@@ -11,107 +11,49 @@
   >
 
   <title>Rock Paper Scissors</title>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
-  <!-- TensorFlow -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+      "https://teachablemachine.withgoogle.com/models/sBS7rUq_0/";
 
-  <!-- Teachable Machine -->
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
  <script>
-
-    const URL =
-    "https://teachablemachine.withgoogle.com/models/sBS7rUq_0/";
+const URL="https://teachablemachine.withgoogle.com/models/sBS7rUq_0/";
 
 
-    let model;
-    let webcam;
+let model, webcam;
+
+async function init() {
+
+  const modelURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
+
+  // 👇 ESTO ES LO CORRECTO
+  model = await tmImage.load(modelURL, metadataURL);
+
+  webcam = new tmImage.Webcam(400, 400, true);
+
+  await webcam.setup();
+  await webcam.play();
+
+  document
+    .getElementById("webcam-container")
+    .appendChild(webcam.canvas);
+
+  loop();
+}
+
+async function loop() {
+  webcam.update();
+  await predict();
+  requestAnimationFrame(loop);
+}
 
 
-    async function init() {
-      try {
+
+  console.log(best.className, best.probability);
+}
+
+
     
-        console.log("Iniciando...");
-    
-        console.log("tmImage:", tmImage);
-    
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-    
-        console.log("Cargando modelo...");
-    
-        model = await tmImage.load(modelURL, metadataURL);
-    
-        console.log("Modelo cargado");
-    
-        webcam = new tmImage.Webcam(400, 400, true);
-    
-        console.log("Cámara creando...");
-    
-        await webcam.setup();
-    
-        console.log("Cámara lista");
-    
-        await webcam.play();
-    
-        document.getElementById("webcam-container")
-          .appendChild(webcam.canvas);
-    
-        requestAnimationFrame(loop);
-    
-      } catch (err) {
-        console.error("FULL ERROR:", err);
-        alert(err?.message || err);
-      }
-    }
-
-
-    async function loop() {
-
-      webcam.update();
-
-      await predict();
-
-      window.requestAnimationFrame(loop);
-    }
-
-
-    async function predict() {
-
-      const prediction =
-        await model.predict(webcam.canvas);
-
-
-      let highest =
-        prediction[0];
-
-
-      prediction.forEach(p => {
-
-        if (
-          p.probability >
-          highest.probability
-        ) {
-
-          highest = p;
-        }
-
-      });
-
-
-      if (
-        highest.probability > 0.90
-      ) {
-
-        document
-          .getElementById("prediction")
-          .innerHTML =
-
-          `
-            Detectado:
-            <b>${highest.className}</b>
-          `;
-      }
 
     }
 
