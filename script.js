@@ -1,33 +1,45 @@
+const URL = "https://teachablemachine.withgoogle.com/models/sBS7rUq_0/";
+
+let model, webcam;
+
 async function init() {
 
-  try {
+  const modelURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
 
-    const stream =
-      await navigator.mediaDevices.getUserMedia({
-        video: true
-      });
+  model = await tmImage.load(modelURL, metadataURL);
 
-    const video =
-      document.createElement("video");
+  webcam = new tmImage.Webcam(400, 400, true);
 
-    video.srcObject = stream;
+  await webcam.setup();
+  await webcam.play();
 
-    video.autoplay = true;
+  document.getElementById("webcam-container")
+    .appendChild(webcam.canvas);
 
-    video.playsInline = true;
+  window.requestAnimationFrame(loop);
+}
 
-    video.width = 400;
+async function loop() {
+  webcam.update();
+  await predict();
+  window.requestAnimationFrame(loop);
+}
 
-    document
-      .getElementById("webcam-container")
-      .appendChild(video);
+async function predict() {
 
-  } catch (err) {
+  const prediction = await model.predict(webcam.canvas);
 
-    console.error(err);
+  let best = prediction[0];
 
-    alert(
-      "No se pudo acceder a la cámara"
-    );
+  for (let p of prediction) {
+    if (p.probability > best.probability) {
+      best = p;
+    }
+  }
+
+  if (best.probability > 0.90) {
+    document.getElementById("label-container").innerHTML =
+      `Detectado: ${best.className}`;
   }
 }

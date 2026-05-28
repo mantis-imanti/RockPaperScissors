@@ -1,37 +1,33 @@
 body {
   margin: 0;
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  text-align: center;
   background: #0f172a;
   color: white;
-  font-family: Arial;
-  text-align: center;
-  padding: 30px;
 }
 
-.container {
-  max-width: 800px;
-  margin: auto;
+h1 {
+  margin-bottom: 20px;
 }
 
 button {
-  padding: 14px 24px;
+  padding: 12px 20px;
+  font-size: 18px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   background: hotpink;
   color: white;
-  font-size: 18px;
   cursor: pointer;
   margin-bottom: 20px;
 }
 
 canvas {
   border-radius: 20px;
-  width: 100%;
-  max-width: 400px;
+  margin-top: 10px;
 }
 
-#prediction,
-#computer,
-#result {
+#label-container {
+  font-size: 28px;
   margin-top: 20px;
-  font-size: 2rem;
 }
