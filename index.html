@@ -1,37 +1,202 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Piedra Papel Tijeras AI</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <title>Rock Paper Scissors AI</title>
 
+  <!-- TensorFlow -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
 
+  <!-- Teachable Machine -->
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+
+  <style>
+
+    body {
+
+      background: #0f172a;
+
+      color: white;
+
+      font-family: Arial;
+
+      text-align: center;
+
+      padding: 30px;
+    }
+
+    button {
+
+      padding: 14px 24px;
+
+      border: none;
+
+      border-radius: 12px;
+
+      background: hotpink;
+
+      color: white;
+
+      font-size: 18px;
+
+      cursor: pointer;
+
+      margin-bottom: 20px;
+    }
+
+    canvas {
+
+      border-radius: 20px;
+
+      width: 100%;
+
+      max-width: 400px;
+    }
+
+    #prediction {
+
+      margin-top: 20px;
+
+      font-size: 2rem;
+    }
+
+  </style>
+
 </head>
 <body>
 
-  <div class="container">
+  <h1>
+    ✊✋✌️ AI RPS
+  </h1>
 
-    <h1>✊✋✌️ AI RPS</h1>
+  <button onclick="init()">
+    Iniciar Cámara
+  </button>
 
-    <button onclick="init()">
-      Iniciar cámara
-    </button>
+  <div id="webcam-container"></div>
 
-    <div id="webcam-container"></div>
+  <div id="prediction"></div>
 
-    <div id="prediction"></div>
+  <script>
 
-    <div id="computer"></div>
+    const URL =
+    "https://teachablemachine.withgoogle.com/models/sBS7rUq_0/";
 
-    <div id="result"></div>
 
-  </div>
+    let model;
+    let webcam;
 
-  <script src="script.js"></script>
+
+    async function init() {
+
+      try {
+
+        const modelURL =
+          URL + "model.json";
+
+        const metadataURL =
+          URL + "metadata.json";
+
+
+        model =
+          await tmImage.load(
+            modelURL,
+            metadataURL
+          );
+
+
+        webcam =
+          new tmImage.Webcam(
+            400,
+            400,
+            true
+          );
+
+
+        await webcam.setup();
+
+        await webcam.play();
+
+        window.requestAnimationFrame(loop);
+
+
+        document
+          .getElementById("webcam-container")
+          .appendChild(webcam.canvas);
+
+      }
+
+      catch (err) {
+
+        console.error(err);
+
+        alert(
+          "Error cargando cámara o modelo"
+        );
+      }
+
+    }
+
+
+    async function loop() {
+
+      webcam.update();
+
+      await predict();
+
+      window.requestAnimationFrame(loop);
+    }
+
+
+    async function predict() {
+
+      const prediction =
+        await model.predict(webcam.canvas);
+
+
+      let highest =
+        prediction[0];
+
+
+      prediction.forEach(p => {
+
+        if (
+          p.probability >
+          highest.probability
+        ) {
+
+          highest = p;
+        }
+
+      });
+
+
+      if (
+        highest.probability > 0.90
+      ) {
+
+        document
+          .getElementById("prediction")
+          .innerHTML =
+
+          `
+            Detectado:
+            <b>${highest.className}</b>
+          `;
+      }
+
+    }
+
+  </script>
+
 </body>
 </html>
+```
